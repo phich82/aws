@@ -7,7 +7,7 @@ provider:
   region: us-east-2
   environment:
     REGION: "${self:provider.region}"
-  stage: dev
+  # stage: dev
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -20,15 +20,21 @@ provider:
       Resource: "arn:aws:dynamodb:us-east-2:*:*"
 
 functions:
-  createCat:
-    handler: controllers/cat.createCat
+  createCat: # Create a new record
+    handler: controllers/cat.createCat # Function for processing when calling api (/create) bellow
     events:
       - http:
           path: create
           method: post
-  findCat:
+  findCat: # Find a record by id
     handler: controllers/cat.findCat
     events:
       - http:
           path: cat/{id}
           method: get
+  updateCat: # update a record by id
+    handler: controllers/cat.updateCat
+    events:
+      - http:
+          path: cat/{id}/update
+          method: put

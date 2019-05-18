@@ -25,6 +25,10 @@ class Cat {
     find(id, callback) {
         return this.tableSchema.get(id, callback);
     }
+
+    update(newItem, callback) {
+        return this.tableSchema.update(newItem, callback);
+    }
 }
  
 module.exports = new Cat();

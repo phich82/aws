@@ -58,5 +58,43 @@ module.exports = {
 
             return callback(null, body);
         });
+    },
+    updateCat: (event, context, callback) => {
+        let id = event.pathParameters.id;
+        let body = PSON.parse(event.body);
+
+        let item = {
+            id: id,
+            name: body.name,
+            kind: body.kind
+        };
+
+        // check exist
+        return Cat.find(id, (err, catResult) => {
+            if (err) {
+                return callback(err);
+            }
+
+            if (!catResult) { // not found
+                return callback(null, {
+                    statusCode: 404,
+                    body: JSON.stringify({error: "Cat not found"})
+                });
+            }
+
+            // update
+            return Cat.update(item, (errUpdate, catResultUpdate) => {
+                if (errUpdate) {
+                    return callback(errUpdate);
+                }
+                return callback(null, {
+                    statusCode: 200,
+                    body: JSON.stringify({
+                        message: "Update cat successfully.",
+                        cat: catResultUpdate.get()
+                    })
+                });
+            })
+        });
     }
 };
