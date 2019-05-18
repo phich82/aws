@@ -1,0 +1,34 @@
+# Created by Phat Huynh on 17-05-2019
+service: crud-cats
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: us-east-2
+  environment:
+    REGION: "${self:provider.region}"
+  stage: dev
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-east-2:*:*"
+
+functions:
+  createCat:
+    handler: controllers/cat.createCat
+    events:
+      - http:
+          path: create
+          method: post
+  findCat:
+    handler: controllers/cat.findCat
+    events:
+      - http:
+          path: cat/{id}
+          method: get
